@@ -1,0 +1,187 @@
+Contradiction-First Loop
+
+SKILL.md
+Description
+A TRIZ-based engine for design, development, and vibe-coding. It's a thin layer of thinking placed BEFORE generation: it turns a task into a contradiction and an ideal, then diverges along proven moves instead of settling for a generic "middle-ground" compromise. Make sure to use this skill whenever the user: frames a trade-off ("how do I combine X and Y", "simple but powerful", "fast but flexible"), says "too much on screen / cluttered / overloaded", designs an interface, flow, component, or architecture, is vibe-coding and at risk of a templated result, argues about defaults vs. control, or asks to "strip the excess / simplify without losing power". Runs standalone by default; bridges to JTBD / design thinking / Lean / ADR only when a real gap or risk calls for it. To run it on a real task, ask the user for the Input Brief (see below). After the loop, a mandatory validation gate must pass before the result is handed off downstream to copy (ux-copy) and humanizer skills — no unvalidated result passes.
+
+Contradiction-First Loop
+What this is
+TRIZ translated into the language of product, interfaces, and vibe-coding. It's a thin layer of thinking that slots in before the prompt / before generation. It's not a replacement for design craft, and not full ARIZ.
+
+It does one thing: it stops you from collapsing a task into a compromise, forces you to name the contradiction and the ideal, and hands you a finite set of divergence moves.
+
+What you get (the deliverable)
+Running the loop produces, before any code or mockup:
+
+A named contradiction (the real tension, not a compromise).
+An ideal (the outcome where the function exists but the mechanism is gone).
+2–3 genuinely different directions to solve it (not one polished guess).
+Acceptance criteria — the contradiction itself becomes the test the final solution must pass.
+Only then do you generate. The output is a solution that dissolves the trade-off instead of splitting the difference.
+
+How it helps
+Generation (AI, vibe-coding) is strong at production and weak at framing: the model converges fast on something plausible, but usually generic and shaped as a "middle ground." This loop hits exactly there — it names the tension before generation and turns it into an acceptance test after. That's the whole mechanism.
+
+The full pipeline (where the loop sits)
+The loop is one stage in a chain. Upstream frames the problem; the loop resolves it; a validation gate guards the exit so nothing unvalidated moves on; downstream turns the resolved structure into human words and ships it. Each stage must pass before the next begins — no empty runs.
+
+  (only if the "why" is unknown)      JTBD / research ─┐
+  (only if the problem is unframed)   Design Thinking ─┤
+                                                       ▼
+              ┌───────────────────────────────────────────────┐
+              │   CONTRADICTION-FIRST LOOP  (moves 1–5)        │
+              │   contradiction → ideal → resources →          │
+              │   diverge → generate & check                   │
+              └───────────────────────────────────────────────┘
+                                                       ▼
+              ▣ VALIDATION GATE ──── FAIL ──► back to Diverge (or add a bridge)
+                                       │ PASS
+                                       ▼
+              Generate result is now structure + logic, no copy
+                                       ▼
+              Copy layer   →  ux-copy skill   (labels, errors, empty states, CTAs)
+                                       ▼
+              Humanize     →  humanizer skill (remove AI tells, tighten wording)
+                                       ▼
+              Ship         →  Lean / MVP      (validate the hypothesis)
+The loop owns the skeleton (what the interface does and how it's structured). It deliberately does not write the words — that's the copy layer. See the validation gate and handoff below.
+
+When to use / when to leave it alone
+Use it for: structural and interaction forks, trade-offs, "overloaded screen," scope decisions, architecture arguments, "simple vs. powerful."
+
+Don't force it on: visual taste and aesthetics, needs research, copywriting, tone/emotion. Those need other tools — this loop hands off to them, it doesn't replace them.
+
+Standalone vs. bridged — default is standalone
+The loop is self-contained. Run it alone unless a specific gap appears. If your problem is already framed, just run the five moves — no JTBD or design-thinking ceremony required. Adding frameworks "to be thorough" is process theater; it slows you down and nobody follows it.
+
+Add a bridge only when it removes a real unknown or a real risk:
+
+You don't actually know the user's real problem or why → pull in JTBD / research first (symptom: you're guessing at the ideal).
+The fix might cause downstream side-effects → sanity-check with systems thinking after step 5 (symptom: "resolving this might break something else").
+The decision needs to be recorded → dump the contradiction + chosen move into an ADR (symptom: "we'll forget why we did this").
+You're shipping to test a hypothesis → hand the output to Lean / MVP (symptom: "we're not sure this is even wanted").
+Rule of thumb: if a bridge doesn't kill a specific unknown or a specific risk, skip it.
+
+What to give it — the Input Brief
+To run the loop on a real task, provide as much of this as you can. The loop runs on items 1 + 3 alone, but items 2, 4, and 6 sharply improve the output. More concrete = better.
+
+Task in one line. What are you designing or building?
+Current state. What exists now? Give a link (Figma / repo / live URL), a screenshot, or a description. If nothing exists yet, say "greenfield."
+The tension you feel. Two things pulling apart (X vs. Y). A rough version is fine — sharpening it is step 1.
+Users. Who uses this, and which segments pull in different directions (e.g., first-timers vs. power users).
+Constraints. Platform, tech stack, brand / design system, time budget, non-negotiables.
+Definition of "good." What does success look like? What must be true for you to accept the result?
+Resources on hand. Existing components, design tokens, data, APIs, prior art you can reuse.
+Optional — the "why." Link to JTBD / research / user feedback if you have it (this feeds the ideal). If the why is unknown, flag it — that's the signal to add a JTBD bridge.
+Form: plain text, links, and screenshots all work. You don't need all eight — send what you have and note what's missing.
+
+Procedure — 5 moves
+Each move is both a thinking step and a prompt pattern for AI.
+
+1. Contradiction — name the tension, don't smooth it. Form: "improve X → Y breaks" or "the element must be both A and not-A." Example: the panel must be simple for a novice and dense for a pro. → If it comes out as a compromise, reframe it as a contradiction. That reframe is the whole point.
+
+2. Ideal (IFR) — describe the outcome where the function exists but the mechanism doesn't. The system does it itself: no screen, no cost, no harm. This is the ceiling. Questions: what if it just happens? what if there's no screen at all? what if we output it instead of asking? → If bridging from JTBD, the ideal's direction = the needed progress achieved with zero effort.
+
+3. Resources — what already exists. Existing components, state, user context, data, design system. Solve with these before adding new UI or a new service.
+
+4. Diverge — apply the moves (2–3 directions, not one). For "both/and" UI dilemmas, start with the 4 separations (below). Then the move deck (references/deck.md). Goal of this step: produce several different directions, not polish the first one.
+
+5. Generate & Check — the contradiction becomes the acceptance test. Only now generate code/mockup. Then check the result against step 1: did the solution dissolve both sides of the contradiction — or just find a compromise? → Main defense against "the AI produced something generic." Compromise = fail; rerun with a different move.
+
+The 4 separations — the flagship tool for interfaces
+The class of dilemmas "must be both simple and powerful" is dissolved by exactly this:
+
+In time → progressive disclosure, onboarding vs. expert mode, wizards, "little first — reveal later."
+In space → separate panels / surfaces / modes, split-view, a dedicated advanced area.
+By condition → adaptive / role-based / contextual UI, feature flags; state depends on user and context.
+Whole / parts → smart defaults (whole) + customization (parts): works out of the box, everything is tunable.
+Validation gate — run before any handoff
+The loop must not pass an unvalidated result downstream. After move 5, run this fixed gate. It produces a single PASS / FAIL. Only a PASS may proceed to the copy layer. This is what turns "we ran the loop" into "the loop actually resolved it."
+
+Every item must read YES:
+
+Contradiction dissolved? Both sides of the move-1 tension hold at once — it is not a compromise. (The core test; if NO, the rest is moot.)
+Ideal-aligned? The result moves toward the move-2 ideal — it didn't quietly drift back to "just add another screen / step / setting."
+Resource-efficient? Solved mostly with existing resources (move 3), not a pile of new UI or services.
+Real divergence behind it? The chosen direction was picked from 2–3 genuinely different options, not the first idea.
+No new contradiction created? Resolving this didn't break something elsewhere (second-order check).
+Constraint-safe? Respects the brief's hard constraints (platform, tech, brand, time).
+On FAIL — do not hand off. Route back:
+
+Fail #1 or #4 → back to move 4 (Diverge) with a different move.
+Fail #2, and you keep guessing the ideal → add a JTBD bridge.
+Fail #5 → add a systems-thinking bridge, then re-diverge.
+Fail #3 or #6 → re-solve within the available resources / constraints.
+Only when all six read YES does the result exit the loop.
+
+After the gate — from structure to words
+A PASS means the skeleton is sound, but it's still structure and logic, not finished copy. Hand off in order:
+
+ux-copy — write the interface words: labels, button text, error messages, empty states, CTAs. Short and clear.
+humanizer — strip AI tells and tighten, so it reads like a person wrote it.
+Ship → Lean / MVP — validate the hypothesis in the real world.
+The loop gives the bones; ux-copy gives the voice; humanizer removes the robot from the voice. Keep these as separate stages — don't fold copywriting into the loop.
+
+Use cases
+Mixed-audience dashboard — "scannable for execs, deep for analysts." → separations (time / space / condition).
+Onboarding — "collect enough setup, but don't overwhelm." → separation in time (progressive) + preliminary action (smart defaults).
+Settings / config panel — "simple defaults, full control." → whole/parts separation.
+Generic vibe-coded output — a component came back templated. Feed the contradiction as the acceptance test and rerun with a specific move.
+Feature-scope creep — use the ideal to ask "what if this happens without the feature?" → cut it.
+Architecture fork — "performance vs. flexibility," "consistency vs. availability." → inversion, segmentation, dynamics.
+Search / filter UI — "powerful querying, not intimidating." → intermediary (query builder) + self-service + another dimension.
+Two full step-by-step runs (filled brief → 5 moves → output) are in references/example.md: a mixed-audience dashboard and a SaaS onboarding flow. Read them to see what a good test case looks like.
+
+Success conditions — the loop delivers when…
+There's a real trade-off (not a trivial task with an obvious answer).
+You can state the problem concretely (Input Brief items 1 + 3 at minimum).
+You actually diverge — pull moves from different groups, produce 2–3 directions.
+You run the step-5 check and reject compromises.
+If it doesn't work — what to refine
+Output still generic → the contradiction is too vague. Sharpen step 1; that's usually the fix.
+Only one direction came out → you didn't diverge. Pull moves from different deck groups.
+The solution breaks something else → add the systems-thinking bridge; check second-order effects.
+You keep guessing at the ideal → you don't know the user's why. Add a JTBD / research bridge (brief item 8).
+It feels like overkill → the task had no real trade-off. Drop the loop and just build it.
+Bridges (use only when justified — see rule above)
+Framework	What it adds	Where it meets the loop
+JTBD	Which job, what progress, the "why"	Feeds the ideal: ideal = the job with zero struggle. Entry into the loop.
+Design Thinking	Empathy, framed problem, testing	The loop occupies the Ideate step (its weak spot). Define → loop → Prototype.
+First-principles	Break to fundamentals, drop "how it's done"	Kin to the ideal; both shed inherited constraints. Reinforces step 2.
+Systems thinking	Links, loops, second-order effects	Catches side-effects; checks whether dissolving one contradiction creates a new one.
+Lean / MVP	Hypothesis, cheap validation	Accepts the step-5 output; the "cheap/disposable" move = throwaway prototype.
+ADR	Records the decision and context	Step-1 contradiction = "Context/Decision"; moves = "Alternatives."
+Nielsen heuristics / design system	Usability and consistency	Applied AFTER divergence, on polish. The loop doesn't replace them.
+Best practices
+Run light by default. Most tasks need one sentence of contradiction + the ideal + the 4 separations. Reach for the full deck only when that isn't enough.
+Spend your effort on step 1. A sharp contradiction is ~80% of the value. Vague contradiction → generic output, every time.
+Force divergence. Pull 2–3 moves from different deck groups. One move = a variation, not a real alternative.
+Make the acceptance check non-negotiable. Skip step 5 and you drift back to compromise.
+Let the ideal be "unreasonable." IFR is a direction, not a spec. "No screen at all" is a legitimate answer worth chasing.
+Prefer resources over new UI. New surfaces are the last resort.
+Anti-patterns
+Running the full loop on a trivial task with no real trade-off → just build it.
+Adding JTBD/DT/Lean "for completeness" when the problem is already framed → process theater.
+Using the loop for aesthetics, tone, or research → wrong tool.
+Accepting the first generated result without the step-5 check → you'll ship a compromise.
+Stacking many moves into one design → mud, not clarity. Diverge, then choose.
+Positioning vs. alternatives
+This method is not a rival to TRIZ — it is TRIZ, trimmed and translated for product/UI/vibe-coding. Its real neighbors are other structured solution-generation methods: SCAMPER (a move checklist, but no contradiction/ideal logic), full TRIZ (same logic, far heavier), and brainstorming (fast but unstructured). It sits in the "generate the solution / by proven moves" quadrant; problem-framing methods (JTBD, Design Thinking) sit elsewhere and feed into it.
+
+Its wedge: resolves a trade-off (not just spawns ideas), stays lightweight, and is AI-native with a built-in check against generic output. It loses when the problem isn't framed yet (use JTBD / Design Thinking) or when raw wide divergence is all you need (brainstorming is faster).
+
+Full map, coordinates, per-method pros/cons, and a head-to-head comparison: references/competitive-analysis.md.
+
+The move deck
+The full translated deck (all 40 TRIZ principles → dev / UI / vibe-coding, grouped by "when to reach for them") lives in references/deck.md. Read it at step 4 when the 4 separations don't cover the task.
+
+One-screen checklist
+Named a contradiction? (not a compromise)
+Have an ideal? (function without mechanism)
+Exhausted existing resources before new UI?
+Produced 2–3 different directions?
+Checked the result against the contradiction? (dissolved or smoothed?)
+Passed the 6-point validation gate before handing off?
+Handed off in order: ux-copy → humanizer → ship?
+Skill saved. Manage
+
